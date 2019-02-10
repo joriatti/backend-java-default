@@ -79,9 +79,8 @@ public class AbstractTestController {
                     .post(SIGNUP_RESOURCE + "/" + defaultAdminEmail + "/" + getHashForSignupUser(defaultAdminEmail))
                     .then()
                     .statusCode(HttpStatus.CREATED.value());
-
-            defaultAdminId = getUserIdByEmail(defaultAdminEmail);
         }
+        defaultAdminId = getUserIdByEmail(defaultAdminEmail);
     }
 
     protected String getHashForSignupUser(String email) {
