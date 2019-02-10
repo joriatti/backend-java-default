@@ -29,6 +29,7 @@ public class AbstractTestController {
     public static String USERS_RESOURCE;
     public static String SIGNUP_RESOURCE;
     public static String LOGIN;
+    public static String TENANTS_RESOURCE;
 
     @LocalServerPort
     protected int randomPort;
@@ -42,6 +43,7 @@ public class AbstractTestController {
     protected final String defaultAdminEmail = "adm@adm.com.br";
     protected final String defaultAdminPassword = "123456";
     protected String defaultAdminId;
+    protected String defaultAdminTenantId;
 
     @Before
     public void setUp() {
@@ -51,6 +53,7 @@ public class AbstractTestController {
         USERS_RESOURCE = API_V1 + "users";
         SIGNUP_RESOURCE = API_V1 + "signup";
         LOGIN = API_V1 + "login";
+        TENANTS_RESOURCE = API_V1 + "tenants";
 
         createDefaultAdminUser();
     }
@@ -81,6 +84,7 @@ public class AbstractTestController {
                     .statusCode(HttpStatus.CREATED.value());
         }
         defaultAdminId = getUserIdByEmail(defaultAdminEmail);
+        defaultAdminTenantId = getUserTenantIdByEmail(defaultAdminEmail);
     }
 
     protected String getHashForSignupUser(String email) {
@@ -90,6 +94,11 @@ public class AbstractTestController {
 
     protected String getUserIdByEmail(String email) {
         String sql = "SELECT ID FROM APP_USER WHERE EMAIL = '" + email + "'";
+        return jdbcTemplate.queryForObject(sql, String.class);
+    }
+    
+    protected String getUserTenantIdByEmail(String email) {
+        String sql = "SELECT TENANT_ID FROM APP_USER WHERE EMAIL = '" + email + "'";
         return jdbcTemplate.queryForObject(sql, String.class);
     }
 

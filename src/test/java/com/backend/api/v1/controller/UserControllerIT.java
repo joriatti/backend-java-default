@@ -1,17 +1,19 @@
 package com.backend.api.v1.controller;
 
-import com.backend.api.v1.dto.UserResponse;
-import com.backend.api.v1.setup.AbstractTestController;
-import com.backend.api.v1.setup.RequestSpecificationBuilder;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
-import org.junit.Test;
-import org.springframework.http.HttpStatus;
-
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+
+import org.junit.Test;
+import org.springframework.http.HttpStatus;
+
+import com.backend.api.v1.dto.UserResponse;
+import com.backend.api.v1.setup.AbstractTestController;
+import com.backend.api.v1.setup.RequestSpecificationBuilder;
+
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 
 public class UserControllerIT extends AbstractTestController {
 
@@ -45,4 +47,5 @@ public class UserControllerIT extends AbstractTestController {
                 .body("code", equalTo("USER_NOT_FOUND_FOR_ID"))
                 .body("message", containsString("aaa"));
     }
+    
 }

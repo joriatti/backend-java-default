@@ -1,5 +1,15 @@
 package com.backend.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.TypedQuery;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.backend.exceptions.BaseException;
 import com.backend.exceptions.NotFoundException;
 import com.backend.model.Signup;
@@ -8,12 +18,6 @@ import com.backend.model.User;
 import com.backend.model.enums.UserStateEnum;
 import com.backend.model.enums.UserTypeEnum;
 import com.backend.util.IdGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class UserService extends AbstractPersistence<User, String> {
@@ -55,5 +59,18 @@ public class UserService extends AbstractPersistence<User, String> {
             throw new NotFoundException("USER_NOT_FOUND_FOR_ID", new Object[] {id});
         }
         return user.get();
+    }
+    
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    public List<User> findAllUsersByTenantId(String currentTenantId, String tenantId) throws BaseException {
+    	if (!currentTenantId.equals(tenantId)) {
+    		throw new NotFoundException("TENANT_NOT_FOUND");
+    	}
+    	String sql = "SELECT u FROM User u WHERE u.tenantId = :tenantId";
+    	TypedQuery<User> query =  this.em.createQuery(sql, User.class);
+    	query.setParameter("tenantId", tenantId);
+    	List<User> result = query.getResultList();
+    	
+    	return result;
     }
 }
